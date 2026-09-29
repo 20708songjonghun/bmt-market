@@ -8,10 +8,28 @@ const STATUSES = ['판매중', '예약중', '판매완료'];
 const GRADE_MAP = { '새책급': '상', '필기약간': '중', '필기많음': '하', '사용감있음': '중' };
 const HAS_NOTE = { '새책급': false, '필기약간': true, '필기많음': true, '사용감있음': false };
 
-const LS_KEYS = { user: 'bmh_market_user_items' };
+const LS_KEYS = { user: 'bmh_market_user_items', favorites: 'bmh_market_favorites', profile: 'bmh_market_profile' };
 
-const fmt = n => (Number(n) || 0).toLocaleString('ko-KR');
-const $ = id => document.getElementById(id);
+const HOUR = 3600000;
+const NOW = Date.now();
+
+const SEED_ITEMS = [
+  { id: 's01', title: 'Win-Q 피복아크용접기능사 필기', category: '자격증수험서', dept: '산업설비과', price: 8000, originalPrice: 22000, condition: '필기약간', location: '설비실습동 앞', desc: '작년에 필기 따면서 쓴 책이에요. 형광펜 자국 있지만 문제 푸는 데 지장 없습니다.', status: '판매중', seller: '3학년 김도현', sellerDept: '산업설비과', createdAt: NOW - 5 * HOUR },
+  { id: 's02', title: 'Win-Q 피복아크용접기능사 실기', category: '자격증수험서', dept: '산업설비과', price: 12000, originalPrice: 28000, condition: '새책급', location: '설비실습동 앞', desc: '필기 아쉽게 떨어져서 실기책은 거의 안 펼쳤어요. 표지에 이름만 살짝 적혀 있습니다.', status: '판매중', seller: '3학년 김도현', sellerDept: '산업설비과', createdAt: NOW - 5 * HOUR },
+  { id: 's03', title: '용접면 (자동 조광식)', category: '실습용품', dept: '산업설비과', price: 25000, originalPrice: 68000, condition: '사용감있음', location: '본관 중앙현관', desc: '1년 정도 사용했지만 작동 잘 됩니다. 흠집은 좀 있어요. 시가 7만 원대인데 싸게 넘겨요.', status: '예약중', seller: '2학년 박지훈', sellerDept: '산업설비과', createdAt: NOW - 26 * HOUR },
+  { id: 's04', title: '재료역학 (마이스터고 전공 교재)', category: '전공교재', dept: '기계과', price: 9000, originalPrice: 18000, condition: '필기약간', location: '도서관 앞', desc: '3학년 때 쓴 교재예요. 중요 부분에 연필 필기 있지만 지우개로 다 지울 수 있어요.', status: '판매중', seller: '3학년 이서준', sellerDept: '기계과', createdAt: NOW - 9 * HOUR },
+  { id: 's05', title: '기계제도', category: '전공교재', dept: '기계과', price: 7000, originalPrice: 16000, condition: '새책급', location: '급식실 앞', desc: '2학기 때 세 벌 산 거라 한 권 그대로 있습니다. 미개봉급이에요.', status: '판매완료', seller: '2학년 정우진', sellerDept: '기계과', createdAt: NOW - 14 * 24 * HOUR },
+  { id: 's06', title: 'Win-Q 전기기능사 필기', category: '자격증수험서', dept: '전기과', price: 7500, originalPrice: 24000, condition: '필기많음', location: '전기실습동 로비', desc: '형광펜 + 볼펜 필기 많습니다. 그래도 기출 다 풀어놔서 오히려 도움될 거예요.', status: '판매중', seller: '3학년 한지원', sellerDept: '전기과', createdAt: NOW - 2 * 24 * HOUR },
+  { id: 's07', title: '전기이론 (전공 교재)', category: '전공교재', dept: '전기과', price: 8000, originalPrice: 19000, condition: '필기약간', location: '전기실습동 로비', desc: '1학년 때 쓴 교재입니다. 깨끗한 편이에요.', status: '판매중', seller: '3학년 한지원', sellerDept: '전기과', createdAt: NOW - 2 * 24 * HOUR },
+  { id: 's08', title: '버니어캘리퍼스 (디지털)', category: '실습용품', dept: '기계과', price: 18000, originalPrice: 45000, condition: '사용감있음', location: '실습동 입구', desc: '2학년 실습 때 쓴 건데 배터리 새로 갈았어요. 측정 잘 됩니다.', status: '판매중', seller: '2학년 최민석', sellerDept: '기계과', createdAt: NOW - 4 * 24 * HOUR },
+  { id: 's09', title: '마이크로미터 (25~50mm)', category: '실습용품', dept: '기계과', price: 22000, originalPrice: 52000, condition: '사용감있음', location: '실습동 입구', desc: '교정지 최근에 받았습니다. 케이스 포함이에요.', status: '예약중', seller: '2학년 최민석', sellerDept: '기계과', createdAt: NOW - 4 * 24 * HOUR },
+  { id: 's10', title: 'PLC 프로그래밍 실습', category: '전공교재', dept: '스마트팩토리과', price: 11000, originalPrice: 23000, condition: '필기약간', location: '기숙사 앞', desc: '실습 코드 필기되어 있어요. 예제랑 똑같아서 오히려 도움될 수도..', status: '판매중', seller: '3학년 강태우', sellerDept: '스마트팩토리과', createdAt: NOW - 7 * 24 * HOUR },
+  { id: 's11', title: '공압·유압 실습 교재', category: '전공교재', dept: '스마트팩토리과', price: 9000, originalPrice: 20000, condition: '새책급', location: '기숙사 앞', desc: '한 학기 쓰긴 했는데 필기 하나도 없어요.', status: '판매중', seller: '3학년 강태우', sellerDept: '스마트팩토리과', createdAt: NOW - 7 * 24 * HOUR },
+  { id: 's12', title: '배관기능사 필기 (기출문제집)', category: '자격증수험서', dept: '산업설비과', price: 5000, originalPrice: 18000, condition: '필기많음', location: '본관 중앙현관', desc: '필기 많이 했습니다.. 대신 중요한 부분 다 체크해놨어요.', status: '판매완료', seller: '졸업생 선배', sellerDept: '산업설비과', createdAt: NOW - 21 * 24 * HOUR },
+  { id: 's13', title: '용접장갑 (소가죽)', category: '실습용품', dept: '산업설비과', price: 7000, originalPrice: 15000, condition: '사용감있음', location: '설비실습동 앞', desc: '한 학기 사용했지만 아직 튼튼합니다.', status: '판매중', seller: '2학년 박지훈', sellerDept: '산업설비과', createdAt: NOW - 30 * HOUR },
+  { id: 's14', title: 'Win-Q 컴퓨터응용밀링기능사 필기+실기', category: '자격증수험서', dept: '기계과', price: 13000, originalPrice: 38000, condition: '필기약간', location: '매점 앞', desc: '밀링 따고 나서 정리합니다. 필기+실기 세트예요.', status: '판매중', seller: '3학년 오재혁', sellerDept: '기계과', createdAt: NOW - 11 * HOUR },
+  { id: 's15', title: '기계공작법', category: '전공교재', dept: '기계과', price: 9500, originalPrice: 17000, condition: '필기약간', location: '도서관 앞', desc: '2학년 교재예요. 밑줄 좀 있어요.', status: '판매중', seller: '3학년 이서준', sellerDept: '기계과', createdAt: NOW - 3 * 24 * HOUR }
+];
 
 const MOCK_DB = [
   { title: 'Win-Q 피복아크용접기능사 필기', category: '자격증수험서', dept: '산업설비과' },
@@ -52,12 +70,6 @@ const QUICK_REPLIES = ['직거래 가능할까요?', '가격 조정 가능할까
 
 const PIN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>';
 
-let allItems = [];
-let currentDetailId = null;
-let currentChatItem = null;
-let selectedImage = null;
-let filters = { query: '', dept: 'all', category: 'all', grade: 'all', note: 'all', status: 'all' };
-
 function loadJSON(key, fallback) {
   try {
     const v = JSON.parse(localStorage.getItem(key));
@@ -76,6 +88,9 @@ function saveJSON(key, val) {
     return false;
   }
 }
+
+const fmt = n => (Number(n) || 0).toLocaleString('ko-KR');
+const $ = id => document.getElementById(id);
 
 function escapeHTML(str) {
   return String(str === null || str === undefined ? '' : str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
@@ -100,6 +115,14 @@ function catIcon(cat, cls) {
   return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="' + cls + '">' + path + '</svg>';
 }
 
+function heartSVG() {
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" fill="none" class="w-[18px] h-[18px]"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>';
+}
+
+function priceLabel(item) {
+  return item.price ? fmt(item.price) + '원' : '나눔';
+}
+
 function placeholderHTML(item) {
   return '<div class="w-full aspect-square bg-gradient-to-br from-blue-50 via-sky-50 to-blue-100 flex flex-col items-center justify-center gap-2 text-blue-400">' +
     catIcon(item.category, 'w-10 h-10') +
@@ -113,18 +136,37 @@ function bigPlaceholder(item) {
     '<span class="text-xs text-slate-400">등록된 사진이 없습니다</span></div>';
 }
 
+let allItems = [];
+let myItems = [];
+let favorites = new Set(loadJSON(LS_KEYS.favorites, []));
+let profile = loadJSON(LS_KEYS.profile, null);
+if (!profile || typeof profile !== 'object') profile = { nickname: '', dept: '' };
+let currentView = 'market';
+let currentDetailId = null;
+let currentChatItem = null;
+let selectedImage = null;
+let editingId = null;
+let editFromDetail = false;
+let sortBy = 'recent';
+let filters = { query: '', dept: 'all', category: 'all', grade: 'all', note: 'all', status: 'available' };
+
 function buildItems() {
-  allItems = loadJSON(LS_KEYS.user, [])
-    .map(u => Object.assign({}, u, { source: 'user' }))
+  myItems = loadJSON(LS_KEYS.user, []);
+  allItems = SEED_ITEMS
+    .concat(myItems.map(u => Object.assign({}, u, { source: 'user' })))
     .sort((a, b) => b.createdAt - a.createdAt);
 }
 
 function getFilteredItems() {
   const q = filters.query.trim().toLowerCase();
-  return allItems.filter(item => {
+  let list = allItems.filter(item => {
     if (filters.dept !== 'all' && item.dept !== filters.dept) return false;
     if (filters.category !== 'all' && item.category !== filters.category) return false;
-    if (filters.status !== 'all' && item.status !== filters.status) return false;
+    if (filters.status !== 'all') {
+      if (filters.status === 'available') {
+        if (item.status === '판매완료') return false;
+      } else if (item.status !== filters.status) return false;
+    }
     if (filters.grade !== 'all' && GRADE_MAP[item.condition] !== filters.grade) return false;
     if (filters.note !== 'all') {
       const has = HAS_NOTE[item.condition];
@@ -137,41 +179,123 @@ function getFilteredItems() {
     }
     return true;
   });
+  if (sortBy === 'price-asc') list = list.slice().sort((a, b) => a.price - b.price);
+  else if (sortBy === 'price-desc') list = list.slice().sort((a, b) => b.price - a.price);
+  return list;
 }
 
-function renderGrid() {
-  const items = getFilteredItems();
-  $('item-grid').innerHTML = items.map(item => {
-    const sold = item.status === '판매완료';
-    const media = item.image
-      ? '<img src="' + item.image + '" alt="' + escapeHTML(item.title) + '" class="w-full aspect-square object-cover' + (sold ? ' grayscale opacity-70' : '') + '">'
-      : placeholderHTML(item);
-    return '<article data-id="' + item.id + '" class="bg-white rounded-2xl overflow-hidden shadow-sm ring-1 ring-slate-200 hover:ring-blue-400 hover:-translate-y-0.5 hover:shadow-lg transition cursor-pointer">' +
-      '<div class="relative">' + media +
-      '<span class="status-badge ' + statusClass(item.status) + '">' + item.status + '</span>' +
-      (item.source === 'user' ? '<span class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-blue-950/80 text-white text-[10px] font-bold">내 등록</span>' : '') +
-      (sold ? '<div class="absolute inset-0 bg-slate-900/30 flex items-center justify-center"><span class="text-white font-extrabold bg-slate-900/70 px-3 py-1 rounded-lg text-sm tracking-widest">거래 완료</span></div>' : '') +
-      '</div>' +
-      '<div class="p-3 space-y-1.5">' +
-      '<p class="text-[11px] font-extrabold text-blue-700">' + CAT_LABELS[item.category] + ' · ' + item.dept + '</p>' +
-      '<h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 min-h-[2.5rem]">' + escapeHTML(item.title) + '</h3>' +
-      '<div class="flex items-baseline gap-1.5 flex-wrap">' +
-      '<span class="text-lg font-extrabold text-blue-700">' + fmt(item.price) + '<span class="text-xs font-bold">원</span></span>' +
-      (item.originalPrice > item.price ? '<span class="text-[11px] text-slate-400 line-through">' + fmt(item.originalPrice) + '원</span>' : '') +
-      '</div>' +
-      '<div><span class="tag tag-sky">' + item.condition + '</span></div>' +
-      '<p class="text-[11px] text-slate-500 flex items-center gap-1">' + PIN_ICON +
-      '<span class="truncate">' + escapeHTML(item.location) + '</span>' +
-      '<span class="text-slate-300 shrink-0">·</span><span class="shrink-0">' + timeAgo(item.createdAt) + '</span></p>' +
-      '</div></article>';
-  }).join('');
-  $('result-count').textContent = items.length;
-  $('hero-count').textContent = allItems.length;
-  $('empty-state').classList.toggle('hidden', items.length > 0);
+function priceHTML(item) {
+  if (!item.price) {
+    return '<div class="flex items-baseline gap-1.5"><span class="text-lg font-extrabold text-emerald-600">나눔</span>' +
+      (item.originalPrice ? '<span class="text-[11px] text-slate-400 line-through">' + fmt(item.originalPrice) + '원</span>' : '') + '</div>';
+  }
+  return '<div class="flex items-baseline gap-1.5 flex-wrap">' +
+    '<span class="text-lg font-extrabold text-blue-700">' + fmt(item.price) + '<span class="text-xs font-bold">원</span></span>' +
+    (item.originalPrice > item.price ? '<span class="text-[11px] text-slate-400 line-through">' + fmt(item.originalPrice) + '원</span>' : '') + '</div>';
+}
+
+function cardHTML(item) {
+  const sold = item.status === '판매완료';
+  const fav = favorites.has(item.id);
+  const media = item.image
+    ? '<img src="' + item.image + '" alt="' + escapeHTML(item.title) + '" class="w-full aspect-square object-cover' + (sold ? ' grayscale opacity-70' : '') + '">'
+    : placeholderHTML(item);
+  return '<article data-id="' + item.id + '" class="bg-white rounded-2xl overflow-hidden shadow-sm ring-1 ring-slate-200 hover:ring-blue-400 hover:-translate-y-0.5 hover:shadow-lg transition cursor-pointer">' +
+    '<div class="relative">' + media +
+    '<span class="status-badge ' + statusClass(item.status) + '">' + item.status + '</span>' +
+    '<button type="button" class="heart-btn' + (fav ? ' active' : '') + '" data-fav="' + item.id + '" aria-label="관심 등록">' + heartSVG() + '</button>' +
+    (sold ? '<div class="absolute inset-0 bg-slate-900/30 flex items-center justify-center pointer-events-none"><span class="text-white font-extrabold bg-slate-900/70 px-3 py-1 rounded-lg text-sm tracking-widest">거래 완료</span></div>' : '') +
+    '</div>' +
+    '<div class="p-3 space-y-1.5">' +
+    '<p class="text-[11px] font-extrabold text-blue-700 flex items-center gap-1.5 flex-wrap">' + CAT_LABELS[item.category] + ' · ' + item.dept +
+    (item.source === 'user' ? ' <span class="tag tag-blue">내 물품</span>' : '') + '</p>' +
+    '<h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 min-h-[2.5rem]">' + escapeHTML(item.title) + '</h3>' +
+    priceHTML(item) +
+    '<div><span class="tag tag-sky">' + item.condition + '</span></div>' +
+    '<p class="text-[11px] text-slate-500 flex items-center gap-1">' + PIN_ICON +
+    '<span class="truncate">' + escapeHTML(item.location) + '</span>' +
+    '<span class="text-slate-300 shrink-0">·</span><span class="shrink-0">' + timeAgo(item.createdAt) + '</span></p>' +
+    '</div></article>';
 }
 
 const showModal = el => el.classList.remove('hidden');
 const hideModal = el => el.classList.add('hidden');
+
+function switchView(v) {
+  currentView = v;
+  document.querySelectorAll('[data-view]').forEach(s => s.classList.toggle('hidden', s.dataset.view !== v));
+  document.querySelectorAll('[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === v));
+  renderView();
+  window.scrollTo({ top: 0 });
+}
+
+function renderView() {
+  if (currentView === 'favorites') renderFavorites();
+  else if (currentView === 'seller') renderSeller();
+  else renderGrid();
+}
+
+function renderGrid() {
+  const items = getFilteredItems();
+  $('item-grid').innerHTML = items.map(cardHTML).join('');
+  $('result-count').textContent = items.length;
+  $('empty-state').classList.toggle('hidden', items.length > 0);
+  $('stat-total').textContent = allItems.length;
+  $('stat-selling').textContent = allItems.filter(i => i.status === '판매중').length;
+  $('stat-fav').textContent = allItems.filter(i => favorites.has(i.id)).length;
+}
+
+function renderFavorites() {
+  const items = allItems.filter(i => favorites.has(i.id));
+  $('fav-grid').innerHTML = items.map(cardHTML).join('');
+  $('fav-count').textContent = items.length;
+  $('fav-empty').classList.toggle('hidden', items.length > 0);
+}
+
+function myRowHTML(item) {
+  const thumb = item.image
+    ? '<img src="' + item.image + '" alt="" class="w-14 h-14 rounded-xl object-cover ring-1 ring-slate-200 shrink-0">'
+    : '<div class="w-14 h-14 rounded-xl bg-blue-50 ring-1 ring-slate-200 flex items-center justify-center text-blue-400 shrink-0">' + catIcon(item.category, 'w-6 h-6') + '</div>';
+  return '<div class="flex items-center gap-3 p-4">' + thumb +
+    '<div class="flex-1 min-w-0">' +
+    '<p class="text-[11px] font-bold text-slate-400">' + CAT_LABELS[item.category] + ' · ' + item.dept + ' · ' + timeAgo(item.createdAt) + '</p>' +
+    '<p class="text-sm font-bold text-slate-800 truncate">' + escapeHTML(item.title) + '</p>' +
+    '<p class="text-sm font-extrabold ' + (item.price ? 'text-blue-700' : 'text-emerald-600') + '">' + priceLabel(item) + '</p>' +
+    '</div>' +
+    '<div class="flex items-center gap-1.5 shrink-0">' +
+    '<select data-status-of="' + item.id + '" class="status-select" aria-label="거래 상태">' +
+    STATUSES.map(s => '<option value="' + s + '"' + (s === item.status ? ' selected' : '') + '>' + s + '</option>').join('') +
+    '</select>' +
+    '<button type="button" data-edit="' + item.id + '" class="px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:border-blue-400 hover:text-blue-700 transition">수정</button>' +
+    '<button type="button" data-del="' + item.id + '" class="px-2.5 py-1.5 rounded-lg border border-red-200 text-xs font-bold text-red-500 hover:bg-red-50 transition">삭제</button>' +
+    '</div></div>';
+}
+
+function renderSeller() {
+  $('profile-nickname').value = profile.nickname || '';
+  $('profile-dept').value = profile.dept || '';
+  const count = s => myItems.filter(i => i.status === s).length;
+  $('my-stat-total').textContent = myItems.length;
+  $('my-stat-selling').textContent = count('판매중');
+  $('my-stat-reserved').textContent = count('예약중');
+  $('my-stat-sold').textContent = count('판매완료');
+  $('my-count').textContent = myItems.length + '개';
+  $('my-items').innerHTML = myItems.map(myRowHTML).join('');
+  $('my-empty').classList.toggle('hidden', myItems.length > 0);
+}
+
+function toggleFavorite(id) {
+  if (favorites.has(id)) {
+    favorites.delete(id);
+    toast('관심 목록에서 제거했어요.');
+  } else {
+    favorites.add(id);
+    toast('관심 목록에 추가했어요!');
+  }
+  saveJSON(LS_KEYS.favorites, Array.from(favorites));
+  renderView();
+  if (currentDetailId === id && !$('detail-modal').classList.contains('hidden')) updateDetailFav();
+}
 
 function openDetail(id) {
   const item = allItems.find(i => i.id === id);
@@ -189,15 +313,36 @@ function openDetail(id) {
     '<span class="tag tag-slate">' + item.condition + ' (' + GRADE_MAP[item.condition] + '급)</span>' +
     (HAS_NOTE[item.condition] ? '<span class="tag tag-amber">필기 있음</span>' : '<span class="tag tag-slate">필기 없음</span>');
   $('detail-title').textContent = item.title;
-  $('detail-price').textContent = fmt(item.price) + '원';
+  const priceEl = $('detail-price');
+  if (item.price) {
+    priceEl.textContent = fmt(item.price) + '원';
+    priceEl.className = 'text-2xl font-extrabold text-blue-700';
+  } else {
+    priceEl.textContent = '무료 나눔';
+    priceEl.className = 'text-2xl font-extrabold text-emerald-600';
+  }
   $('detail-original').textContent = item.originalPrice > item.price ? '정가 ' + fmt(item.originalPrice) + '원' : '';
-  $('detail-seller').textContent = item.seller || '익명 (재학생)';
+  $('detail-seller').textContent = (item.seller || '익명 재학생') + ' · ' + (item.sellerDept || item.dept);
   $('detail-time').textContent = timeAgo(item.createdAt);
   $('detail-condition').textContent = item.condition + ' (' + GRADE_MAP[item.condition] + '급)';
   $('detail-location').textContent = item.location;
   $('detail-desc').textContent = item.desc || '상세 설명이 없습니다.';
-  renderStatusGroup(item);
+  const mine = item.source === 'user';
+  $('detail-manage').classList.toggle('hidden', !mine);
+  $('detail-buy').classList.toggle('hidden', mine);
+  if (mine) renderStatusGroup(item);
+  else updateDetailFav();
   showModal($('detail-modal'));
+}
+
+function updateDetailFav() {
+  const item = allItems.find(i => i.id === currentDetailId);
+  if (!item) return;
+  const fav = favorites.has(item.id);
+  const btn = $('detail-fav-btn');
+  btn.className = 'px-4 rounded-xl border font-bold text-sm transition flex items-center gap-1.5 ' +
+    (fav ? 'border-red-200 bg-red-50 text-red-500 hover:bg-red-100' : 'border-slate-300 text-slate-500 hover:border-red-300 hover:text-red-500');
+  btn.innerHTML = heartSVG() + (fav ? '관심 등록됨' : '찜하기');
 }
 
 function renderStatusGroup(item) {
@@ -227,20 +372,20 @@ function changeStatus(id, status) {
     u.status = status;
     saveJSON(LS_KEYS.user, users);
   }
-  renderGrid();
-  refreshDetail();
-  toast("거래 상태가 '" + status + "'(으)로 변경되었습니다.");
+  renderView();
+  if (currentDetailId === id && !$('detail-modal').classList.contains('hidden')) refreshDetail();
+  toast("거래 상태를 '" + status + "'(으)로 바꿨어요.");
 }
 
-function deleteItem() {
-  const item = allItems.find(i => i.id === currentDetailId);
+function deleteItem(id) {
+  const item = allItems.find(i => i.id === id);
   if (!item) return;
-  if (!confirm("'" + item.title + "' 판매글을 삭제할까요?")) return;
-  saveJSON(LS_KEYS.user, loadJSON(LS_KEYS.user, []).filter(x => x.id !== item.id));
-  hideModal($('detail-modal'));
+  if (!confirm("'" + item.title + "' 글을 삭제할까요? 삭제하면 되돌릴 수 없어요.")) return;
+  saveJSON(LS_KEYS.user, loadJSON(LS_KEYS.user, []).filter(x => x.id !== id));
+  if (currentDetailId === id) hideModal($('detail-modal'));
   buildItems();
-  renderGrid();
-  toast('판매글이 삭제되었습니다.');
+  renderView();
+  toast('판매글을 삭제했어요.');
 }
 
 function openChat() {
@@ -248,8 +393,10 @@ function openChat() {
   if (!item) return;
   currentChatItem = item;
   $('chat-title').textContent = item.title;
+  $('chat-seller').textContent = (item.seller || '익명 재학생') + ' · ' + (item.sellerDept || item.dept) + ' · ' + priceLabel(item);
   $('chat-messages').innerHTML = '';
-  appendMsg('안녕하세요! "' + item.title + '"에 관심 가져주셔서 감사합니다. 상태는 "' + item.condition + '"이며 "' + item.location + '"에서 교내 직거래 가능합니다. 궁금한 점 편하게 물어보세요!', 'bot');
+  appendMsg('교내 직거래 매너! 물품은 직접 확인한 뒤 거래하고, 어떤 경우에도 선입금은 하지 않아요.', 'sys');
+  appendMsg('안녕하세요! "' + item.title + '"에 관심 가져주셔서 감사합니다. 상태는 "' + item.condition + '"이고, ' + item.location + '에서 직거래 가능해요. 궁금한 점 편하게 물어보세요!', 'bot');
   showModal($('chat-modal'));
 }
 
@@ -279,9 +426,9 @@ function botReply(text, item) {
   const t = (text || '').toLowerCase();
   const has = function () { for (let i = 0; i < arguments.length; i++) { if (t.includes(arguments[i])) return true; } return false; };
   if (has('직거래', '만나', '장소', '어디', '위치')) return '네, 가능합니다! "' + item.location + '"에서 만나는 걸 추천해요. 점심시간(12:40~13:30) 또는 방과 후(16:40 이후) 중 어느 쪽이 편하신가요?';
-  if (has('가격', '할인', '네고', '깎', '싸게')) return '가격은 ' + fmt(item.price) + '원입니다. 상태 대비 착한 가격이라 크게는 어렵지만, 바로 가져가주시면 조금은 협의 가능해요!';
+  if (has('가격', '할인', '네고', '깎', '싸게')) return '가격은 ' + priceLabel(item) + '이에요. 상태 대비 착한 가격이라 크게는 어렵지만, 바로 가져가주시면 조금은 협의 가능해요!';
   if (has('언제', '시간', '오늘', '내일', '몇 시')) return '점심시간이나 방과 후 실습 끝나고 바로 거래할 수 있어요. 하교 전까지 시간 알려주시면 맞춰드릴게요!';
-  if (has('상태', '필기', '사용감', '새책')) return '상품 상태는 "' + item.condition + '"(' + GRADE_MAP[item.condition] + '급)입니다. 상세 설명 참고해주시고, 직접 보고 판단하셔도 괜찮아요.';
+  if (has('상태', '필기', '사용감', '새책')) return '상품 상태는 "' + item.condition + '"(' + GRADE_MAP[item.condition] + '급)이에요. 상세 설명 참고해주시고, 직접 보고 판단하셔도 괜찮아요.';
   if (has('예약')) return '예약 원하시면 오늘 중으로 거래 부탁드려요! 확정되면 판매글 상태를 "예약중"으로 바꿔두겠습니다.';
   if (has('결제', '계좌', '카드', '송금')) return '교내 직거래 원칙이라 현금 또는 간편 송금으로 거래합니다. 안전을 위해 선입금은 하지 않아요!';
   if (has('안녕', '하이', '반가')) return '안녕하세요! "' + item.title + '"에 관심 가져주셔서 감사합니다. 무엇이든 편하게 물어보세요.';
@@ -330,9 +477,38 @@ function resetForm() {
   hideSuggestions();
 }
 
-function openRegister() {
+function updateRegSellerLine() {
+  const name = (profile.nickname || '').trim() || '익명 재학생';
+  const dept = profile.dept || '학과 미설정';
+  $('reg-seller-name').textContent = name + ' (' + dept + ')';
+}
+
+function openRegister(item, fromDetail) {
+  editingId = item ? item.id : null;
+  editFromDetail = !!fromDetail;
   resetForm();
+  const isEdit = !!item;
+  $('register-title').textContent = isEdit ? '판매글 수정' : '판매글 등록';
+  $('register-submit').textContent = isEdit ? '수정하기' : '등록하기';
+  updateRegSellerLine();
+  if (isEdit) {
+    $('reg-title').value = item.title;
+    $('reg-dept').value = item.dept;
+    $('reg-category').value = item.category;
+    $('reg-price').value = item.price || '';
+    $('reg-original').value = item.originalPrice || '';
+    $('reg-condition').value = item.condition;
+    $('reg-location').value = item.location;
+    $('reg-desc').value = item.desc || '';
+    if (item.image) {
+      selectedImage = item.image;
+      $('reg-preview').src = item.image;
+      $('reg-preview-wrap').classList.remove('hidden');
+      $('reg-image-label').classList.add('hidden');
+    }
+  }
   showModal($('register-modal'));
+  setTimeout(function () { $('reg-title').focus(); }, 80);
 }
 
 let toastTimer = null;
@@ -345,10 +521,12 @@ function toast(msg, type) {
 }
 
 function resetFilters() {
-  filters = { query: '', dept: 'all', category: 'all', grade: 'all', note: 'all', status: 'all' };
+  filters = { query: '', dept: 'all', category: 'all', grade: 'all', note: 'all', status: 'available' };
+  sortBy = 'recent';
   $('search-input').value = '';
   $('filter-dept').value = 'all';
-  $('filter-status').value = 'all';
+  $('filter-status').value = 'available';
+  $('sort-select').value = 'recent';
   [['cat-chips', 'category'], ['grade-chips', 'grade'], ['note-chips', 'note']].forEach(function (pair) {
     document.querySelectorAll('#' + pair[0] + ' .chip-btn').forEach(function (b) {
       b.classList.toggle('active', b.dataset[pair[1]] === 'all');
@@ -357,23 +535,39 @@ function resetFilters() {
   renderGrid();
 }
 
+function bindGrid(el) {
+  el.addEventListener('click', e => {
+    const favBtn = e.target.closest('[data-fav]');
+    if (favBtn) {
+      toggleFavorite(favBtn.dataset.fav);
+      return;
+    }
+    const card = e.target.closest('[data-id]');
+    if (card) openDetail(card.dataset.id);
+  });
+}
+
 function init() {
   $('filter-dept').innerHTML = '<option value="all">전체 학과</option>' + DEPTS.map(d => '<option value="' + d + '">' + d + '</option>').join('');
-  $('filter-status').innerHTML = '<option value="all">전체</option>' + STATUSES.map(s => '<option value="' + s + '">' + s + '</option>').join('');
   $('reg-dept').innerHTML = '<option value="">학과 선택</option>' + DEPTS.map(d => '<option value="' + d + '">' + d + '</option>').join('');
   $('reg-category').innerHTML = '<option value="">카테고리 선택</option>' + CATEGORIES.map(c => '<option value="' + c + '">' + CAT_LABELS[c] + '</option>').join('');
   $('reg-condition').innerHTML = CONDITIONS.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+  $('profile-dept').innerHTML = '<option value="">학과 선택</option>' + DEPTS.map(d => '<option value="' + d + '">' + d + '</option>').join('');
   $('chat-quick').innerHTML = QUICK_REPLIES.map(q =>
     '<button type="button" class="shrink-0 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-600 hover:border-blue-400 hover:text-blue-700 transition" data-q="' + q + '">' + q + '</button>'
   ).join('');
 
   buildItems();
-  renderGrid();
+  switchView('market');
+
+  document.querySelectorAll('[data-nav]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.nav)));
 
   $('search-input').addEventListener('input', e => { filters.query = e.target.value; renderGrid(); });
   $('filter-dept').addEventListener('change', e => { filters.dept = e.target.value; renderGrid(); });
   $('filter-status').addEventListener('change', e => { filters.status = e.target.value; renderGrid(); });
+  $('sort-select').addEventListener('change', e => { sortBy = e.target.value; renderGrid(); });
   $('reset-filters').addEventListener('click', resetFilters);
+  $('empty-reset-btn').addEventListener('click', resetFilters);
 
   [['cat-chips', 'category'], ['grade-chips', 'grade'], ['note-chips', 'note']].forEach(function (pair) {
     $(pair[0]).addEventListener('click', e => {
@@ -385,8 +579,12 @@ function init() {
     });
   });
 
-  $('open-register').addEventListener('click', openRegister);
-  $('empty-register-btn').addEventListener('click', openRegister);
+  bindGrid($('item-grid'));
+  bindGrid($('fav-grid'));
+
+  ['open-register', 'fab-register', 'seller-register-btn', 'empty-register-btn', 'my-empty-register-btn'].forEach(id => {
+    $(id).addEventListener('click', () => openRegister(null, false));
+  });
 
   document.querySelectorAll('[data-close]').forEach(el => {
     el.addEventListener('click', function () { hideModal($(el.dataset.close)); });
@@ -395,13 +593,8 @@ function init() {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (!$('chat-modal').classList.contains('hidden')) { hideModal($('chat-modal')); return; }
+    if (!$('register-modal').classList.contains('hidden')) { hideModal($('register-modal')); return; }
     if (!$('detail-modal').classList.contains('hidden')) hideModal($('detail-modal'));
-    if (!$('register-modal').classList.contains('hidden')) hideModal($('register-modal'));
-  });
-
-  $('item-grid').addEventListener('click', e => {
-    const card = e.target.closest('[data-id]');
-    if (card) openDetail(card.dataset.id);
   });
 
   $('detail-status-group').addEventListener('click', e => {
@@ -409,8 +602,43 @@ function init() {
     if (btn && currentDetailId) changeStatus(currentDetailId, btn.dataset.status);
   });
 
+  $('detail-edit-btn').addEventListener('click', () => {
+    const item = allItems.find(i => i.id === currentDetailId);
+    if (!item) return;
+    hideModal($('detail-modal'));
+    openRegister(item, true);
+  });
+
+  $('detail-delete-btn').addEventListener('click', () => {
+    if (currentDetailId) deleteItem(currentDetailId);
+  });
+
   $('detail-chat-btn').addEventListener('click', openChat);
-  $('detail-delete-btn').addEventListener('click', deleteItem);
+  $('detail-fav-btn').addEventListener('click', () => {
+    if (currentDetailId) toggleFavorite(currentDetailId);
+  });
+
+  $('my-items').addEventListener('click', e => {
+    const editBtn = e.target.closest('[data-edit]');
+    if (editBtn) {
+      const item = myItems.find(i => i.id === editBtn.dataset.edit);
+      if (item) openRegister(item, false);
+      return;
+    }
+    const delBtn = e.target.closest('[data-del]');
+    if (delBtn) deleteItem(delBtn.dataset.del);
+  });
+
+  $('my-items').addEventListener('change', e => {
+    const sel = e.target.closest('[data-status-of]');
+    if (sel) changeStatus(sel.dataset.statusOf, sel.value);
+  });
+
+  $('profile-save').addEventListener('click', () => {
+    profile = { nickname: $('profile-nickname').value.trim(), dept: $('profile-dept').value };
+    saveJSON(LS_KEYS.profile, profile);
+    toast('판매자 프로필을 저장했어요. 다음 등록부터 적용돼요.');
+  });
 
   $('chat-quick').addEventListener('click', e => {
     const btn = e.target.closest('[data-q]');
@@ -496,31 +724,48 @@ function init() {
     if (!title) { toast('물품 제목을 입력해주세요.', 'error'); return; }
     if (!dept) { toast('학과를 선택해주세요.', 'error'); return; }
     if (!category) { toast('품목 카테고리를 선택해주세요.', 'error'); return; }
-    if (isNaN(price) || price < 0) { toast('판매 가격을 올바르게 입력해주세요.', 'error'); return; }
+    if (isNaN(price) || price < 0) { toast('판매 가격을 올바르게 입력해주세요. (나눔은 0 입력)', 'error'); return; }
     if (!location) { toast('거래 희망 장소를 입력해주세요.', 'error'); return; }
+    const payload = { title: title, dept: dept, category: category, price: price, originalPrice: originalPrice, condition: condition, location: location, desc: desc, image: selectedImage };
     const users = loadJSON(LS_KEYS.user, []);
-    users.push({
-      id: 'u' + Date.now(),
-      title: title,
-      dept: dept,
-      category: category,
-      price: price,
-      originalPrice: originalPrice,
-      condition: condition,
-      location: location,
-      desc: desc,
-      status: '판매중',
-      seller: '나 (재학생)',
-      createdAt: Date.now(),
-      image: selectedImage
-    });
-    if (!saveJSON(LS_KEYS.user, users)) return;
-    resetForm();
-    hideModal($('register-modal'));
-    buildItems();
-    renderGrid();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast('판매글이 등록되었습니다! 메인 목록에 바로 반영됩니다.');
+    if (editingId) {
+      const u = users.find(x => x.id === editingId);
+      if (!u) { toast('수정할 물품을 찾을 수 없어요.', 'error'); return; }
+      Object.assign(u, payload);
+      if (!saveJSON(LS_KEYS.user, users)) return;
+      const editedId = editingId;
+      resetForm();
+      hideModal($('register-modal'));
+      editingId = null;
+      buildItems();
+      renderView();
+      toast('판매글을 수정했어요.');
+      if (editFromDetail) openDetail(editedId);
+      editFromDetail = false;
+    } else {
+      users.push(Object.assign({
+        id: 'u' + Date.now(),
+        status: '판매중',
+        seller: (profile.nickname || '').trim() || '익명 재학생',
+        sellerDept: profile.dept || dept,
+        createdAt: Date.now()
+      }, payload));
+      if (!saveJSON(LS_KEYS.user, users)) return;
+      resetForm();
+      hideModal($('register-modal'));
+      editingId = null;
+      buildItems();
+      if (currentView !== 'market') switchView('seller');
+      else renderGrid();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      toast('판매글을 등록했어요! 판매센터에서 관리할 수 있어요.');
+    }
+  });
+
+  $('reset-data-btn').addEventListener('click', () => {
+    if (!confirm('등록한 판매글, 관심 목록, 프로필이 모두 삭제되고 처음 상태로 돌아가요. 계속할까요?')) return;
+    Object.values(LS_KEYS).forEach(k => localStorage.removeItem(k));
+    location.reload();
   });
 }
 

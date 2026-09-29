@@ -14,24 +14,25 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-slate-100 text-slate-800 pb-[4.5rem] sm:pb-0">
 
 <header class="sticky top-0 z-40 shadow-lg">
   <div class="hazard h-1.5"></div>
   <div class="bg-blue-950 text-white">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
-      <div class="flex items-center gap-2.5 mr-auto">
-        <img src="images.png" alt="부산기계공업고등학교 로고" class="w-11 h-11 rounded-full bg-white object-contain p-0.5 shadow-lg shadow-sky-500/30 ring-2 ring-sky-400/40">
-        <span>
-          <b class="block text-base sm:text-lg leading-tight font-extrabold">부산기계공고 전공&amp;자격증 마켓</b>
-          <span class="block text-[10px] tracking-[0.18em] text-sky-300 font-bold">BMH MEISTER MARKET</span>
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+      <button type="button" data-nav="market" class="flex items-center gap-2.5 mr-auto text-left min-w-0">
+        <img src="images.png" alt="부산기계공업고등학교 로고" class="w-10 h-10 rounded-full bg-white object-contain p-0.5 shrink-0 ring-2 ring-sky-400/40">
+        <span class="min-w-0">
+          <b class="block text-base sm:text-lg leading-tight font-extrabold truncate">부산기계공고 전공&amp;자격증 마켓</b>
+          <span class="hidden sm:block text-[10px] tracking-[0.18em] text-sky-300 font-bold">BMH MEISTER MARKET</span>
         </span>
-      </div>
-      <div class="relative flex-1 min-w-[180px] order-3 sm:order-2 w-full sm:w-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-300"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-        <input id="search-input" type="text" placeholder="책·자격증·과목명 검색 (예: 용접, 재료역학, Win-Q)" class="w-full rounded-full bg-blue-900/70 pl-9 pr-4 py-2.5 text-sm text-white placeholder-blue-300/80 outline-none focus:ring-2 focus:ring-sky-400 transition">
-      </div>
-      <button id="open-register" class="order-2 sm:order-3 bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 shadow-lg shadow-sky-500/25 transition">
+      </button>
+      <nav class="hidden sm:flex items-center gap-1 bg-blue-900/60 rounded-xl p-1">
+        <button type="button" class="nav-tab active" data-nav="market">중고장터</button>
+        <button type="button" class="nav-tab" data-nav="favorites">관심목록</button>
+        <button type="button" class="nav-tab" data-nav="seller">판매센터</button>
+      </nav>
+      <button id="open-register" type="button" class="hidden sm:flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 transition shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         판매글 등록
       </button>
@@ -39,94 +40,237 @@
   </div>
 </header>
 
-<section class="max-w-6xl mx-auto px-4 pt-5">
-  <div class="hero rounded-2xl text-white p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 shadow-lg">
-    <img src="images.png" alt="부산기계공업고등학교 로고" class="w-16 h-16 rounded-full bg-white object-contain p-1 shrink-0 self-start sm:self-center shadow-lg">
-    <div class="flex-1">
-      <p class="text-[11px] font-bold text-sky-200 tracking-[0.15em] mb-1">BUSAN MECHANICAL TECHNICAL HIGH SCHOOL</p>
-      <h2 class="text-lg sm:text-xl font-extrabold leading-snug">교내 학생 전용 <span class="text-sky-300">전공 교재·자격증 수험서·실습용품</span> 직거래 마켓</h2>
-      <p class="text-xs text-blue-100/80 mt-1.5">로그인 없이 이용 · 서버와 DB 없이 브라우저에서만 동작 · 등록 글은 내 브라우저(localStorage)에 저장됩니다</p>
+<section data-view="market">
+  <div class="max-w-6xl mx-auto px-4 pt-4">
+    <div class="hero rounded-2xl text-white p-5 shadow-lg">
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[220px]">
+          <h2 class="text-base sm:text-lg font-extrabold leading-snug">전공 교재 · 자격증 수험서 · 실습용품 교내 직거래</h2>
+          <p class="text-xs text-blue-100/85 mt-1.5">다 쓴 물건은 후배에게 넘기고, 필요한 책은 선배에게 싸게 사세요</p>
+        </div>
+        <div class="flex gap-5 sm:gap-7 ml-auto">
+          <div class="text-center">
+            <p class="text-2xl font-extrabold" id="stat-total">0</p>
+            <p class="text-[10px] text-blue-200 font-bold mt-0.5">전체 물품</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl font-extrabold" id="stat-selling">0</p>
+            <p class="text-[10px] text-blue-200 font-bold mt-0.5">판매중</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl font-extrabold" id="stat-fav">0</p>
+            <p class="text-[10px] text-blue-200 font-bold mt-0.5">내 관심</p>
+          </div>
+        </div>
+      </div>
+      <div class="relative mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+        <input id="search-input" type="text" placeholder="찾는 책이나 물건 검색 (예: 용접, 재료역학, Win-Q)" class="w-full rounded-xl bg-white/95 text-slate-800 placeholder-slate-400 pl-10 pr-4 py-3 text-sm font-medium outline-none focus:ring-2 focus:ring-sky-300 transition">
+      </div>
     </div>
-    <div class="sm:text-right shrink-0">
-      <p class="text-3xl font-extrabold" id="hero-count">0</p>
-      <p class="text-xs text-blue-200 font-semibold">등록된 물품</p>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 pt-4">
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 sm:p-5 space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end">
+        <label class="block">
+          <span class="form-label">학과</span>
+          <select id="filter-dept" class="input"></select>
+        </label>
+        <label class="block">
+          <span class="form-label">거래 상태</span>
+          <select id="filter-status" class="input">
+            <option value="available" selected>거래가능 (판매중·예약중)</option>
+            <option value="all">전체 보기</option>
+            <option value="판매중">판매중</option>
+            <option value="예약중">예약중</option>
+            <option value="판매완료">판매완료</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="form-label">정렬</span>
+          <select id="sort-select" class="input">
+            <option value="recent" selected>최신순</option>
+            <option value="price-asc">가격 낮은순</option>
+            <option value="price-desc">가격 높은순</option>
+          </select>
+        </label>
+        <button id="reset-filters" type="button" class="h-[42px] px-4 rounded-xl border border-slate-300 text-slate-500 text-sm font-bold hover:border-blue-400 hover:text-blue-700 transition whitespace-nowrap col-span-2 sm:col-span-1">필터 초기화</button>
+      </div>
+      <div class="space-y-2.5">
+        <div id="cat-chips" class="flex flex-wrap gap-2">
+          <button type="button" class="chip-btn active" data-category="all">전체</button>
+          <button type="button" class="chip-btn" data-category="전공교재">전공 교재</button>
+          <button type="button" class="chip-btn" data-category="자격증수험서">자격증 수험서</button>
+          <button type="button" class="chip-btn" data-category="실습용품">실습용품/공구</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-2">
+          <span class="text-xs font-extrabold text-slate-400 w-12 shrink-0">책 상태</span>
+          <div id="grade-chips" class="flex flex-wrap gap-1.5">
+            <button type="button" class="chip-btn active" data-grade="all">전체</button>
+            <button type="button" class="chip-btn" data-grade="상">상급</button>
+            <button type="button" class="chip-btn" data-grade="중">중급</button>
+            <button type="button" class="chip-btn" data-grade="하">하급</button>
+          </div>
+          <span class="text-xs font-extrabold text-slate-400 w-12 shrink-0 ml-2">필기</span>
+          <div id="note-chips" class="flex flex-wrap gap-1.5">
+            <button type="button" class="chip-btn active" data-note="all">전체</button>
+            <button type="button" class="chip-btn" data-note="yes">필기 있음</button>
+            <button type="button" class="chip-btn" data-note="no">필기 없음</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 py-5">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-sm font-bold text-slate-600">물품 <span id="result-count" class="text-blue-700">0</span>개</p>
+      <p class="hidden sm:block text-xs text-slate-400">카드를 누르면 상세 정보가 열려요</p>
+    </div>
+    <div id="item-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    <div id="empty-state" class="hidden text-center py-16">
+      <img src="images.png" alt="부산기계공업고등학교 로고" class="w-20 h-20 mx-auto rounded-full bg-white object-contain p-1 shadow-md ring-1 ring-slate-200 mb-4">
+      <p class="font-bold text-slate-600">조건에 맞는 물품이 없습니다</p>
+      <p class="text-sm text-slate-400 mt-1">검색어나 필터를 바꾸거나, 내 물품을 직접 등록해보세요!</p>
+      <div class="mt-5 flex justify-center gap-2">
+        <button id="empty-register-btn" type="button" class="px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-sm font-bold transition">판매글 등록하기</button>
+        <button id="empty-reset-btn" type="button" class="px-5 py-2.5 rounded-xl bg-white ring-1 ring-slate-300 text-slate-600 hover:ring-blue-400 text-sm font-bold transition">필터 초기화</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section data-view="favorites" class="hidden">
+  <div class="max-w-6xl mx-auto px-4 py-5">
+    <div class="flex items-end justify-between mb-3 flex-wrap gap-2">
+      <div>
+        <h2 class="text-lg font-extrabold text-slate-800">관심 목록</h2>
+        <p class="text-xs text-slate-400 mt-0.5">하트를 누른 물품만 모아봐요 · <b id="fav-count" class="text-slate-600">0</b>개</p>
+      </div>
+      <button data-nav="market" type="button" class="text-xs font-bold text-blue-700 hover:underline">중고장터로 돌아가기 →</button>
+    </div>
+    <div id="fav-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    <div id="fav-empty" class="hidden text-center py-20">
+      <div class="w-16 h-16 mx-auto rounded-full bg-red-50 flex items-center justify-center text-red-400 mb-4 ring-1 ring-red-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" class="w-8 h-8"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+      </div>
+      <p class="font-bold text-slate-600">아직 관심 물품이 없어요</p>
+      <p class="text-sm text-slate-400 mt-1">중고장터에서 하트를 누르면 여기에 모아져요</p>
+      <button data-nav="market" type="button" class="mt-5 px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-sm font-bold transition">중고장터 구경하기</button>
     </div>
   </div>
 </section>
 
-<section class="max-w-6xl mx-auto px-4 pt-4">
-  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 sm:p-5 space-y-4">
-    <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
-      <label class="block">
-        <span class="form-label">학과 선택</span>
-        <select id="filter-dept" class="input"></select>
-      </label>
-      <label class="block">
-        <span class="form-label">거래 상태</span>
-        <select id="filter-status" class="input"></select>
-      </label>
-      <button id="reset-filters" class="h-[42px] px-4 rounded-xl border border-slate-300 text-slate-500 text-sm font-bold hover:border-blue-400 hover:text-blue-700 transition whitespace-nowrap">필터 초기화</button>
-    </div>
-    <div class="space-y-2.5">
-      <div id="cat-chips" class="flex flex-wrap gap-2">
-        <button class="chip-btn active" data-category="all">전체</button>
-        <button class="chip-btn" data-category="전공교재">전공 교재</button>
-        <button class="chip-btn" data-category="자격증수험서">자격증 수험서</button>
-        <button class="chip-btn" data-category="실습용품">실습용품/공구</button>
+<section data-view="seller" class="hidden">
+  <div class="max-w-6xl mx-auto px-4 py-5 space-y-4">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h2 class="text-lg font-extrabold text-slate-800">판매자 센터</h2>
+        <p class="text-xs text-slate-400 mt-0.5">내가 등록한 물품의 상태를 관리하세요</p>
       </div>
-      <div class="flex flex-wrap items-center gap-x-2 gap-y-2">
-        <span class="text-xs font-extrabold text-slate-400 w-12 shrink-0">책 상태</span>
-        <div id="grade-chips" class="flex flex-wrap gap-1.5">
-          <button class="chip-btn active" data-grade="all">전체</button>
-          <button class="chip-btn" data-grade="상">상급</button>
-          <button class="chip-btn" data-grade="중">중급</button>
-          <button class="chip-btn" data-grade="하">하급</button>
+      <button id="seller-register-btn" type="button" class="bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        새 물품 등록
+      </button>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 sm:p-5">
+      <p class="text-sm font-extrabold text-slate-700 mb-3">판매자 프로필 <span class="text-xs font-normal text-slate-400">· 내 판매글에 표시되는 정보예요</span></p>
+      <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3">
+        <label class="block">
+          <span class="form-label">닉네임</span>
+          <input id="profile-nickname" type="text" class="input" placeholder="예: 용접3년차" maxlength="12" autocomplete="off">
+        </label>
+        <label class="block">
+          <span class="form-label">학과</span>
+          <select id="profile-dept" class="input"></select>
+        </label>
+        <button id="profile-save" type="button" class="h-[42px] px-5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold transition whitespace-nowrap">저장</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 text-center">
+        <p class="text-2xl font-extrabold text-slate-800" id="my-stat-total">0</p>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">전체</p>
+      </div>
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 text-center">
+        <p class="text-2xl font-extrabold text-emerald-600" id="my-stat-selling">0</p>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">판매중</p>
+      </div>
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 text-center">
+        <p class="text-2xl font-extrabold text-amber-500" id="my-stat-reserved">0</p>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">예약중</p>
+      </div>
+      <div class="bg-white rounded-2xl ring-1 ring-slate-200 p-4 text-center">
+        <p class="text-2xl font-extrabold text-slate-500" id="my-stat-sold">0</p>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">판매완료</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+      <div class="px-4 sm:px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+        <p class="text-sm font-extrabold text-slate-700">내 판매 물품</p>
+        <span id="my-count" class="text-xs text-slate-400 font-bold">0개</span>
+      </div>
+      <div id="my-items" class="divide-y divide-slate-100"></div>
+      <div id="my-empty" class="hidden p-12 text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-sky-50 flex items-center justify-center text-sky-500 mb-4 ring-1 ring-sky-100">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .414.336.75.75.75z"/></svg>
         </div>
-        <span class="text-xs font-extrabold text-slate-400 w-12 shrink-0 ml-2">필기</span>
-        <div id="note-chips" class="flex flex-wrap gap-1.5">
-          <button class="chip-btn active" data-note="all">전체</button>
-          <button class="chip-btn" data-note="yes">필기 있음</button>
-          <button class="chip-btn" data-note="no">필기 없음</button>
-        </div>
+        <p class="font-bold text-slate-600">등록한 판매글이 없어요</p>
+        <p class="text-sm text-slate-400 mt-1">쓰다 남은 교재나 실습용품을 등록해서 후배에게 넘겨봐요!<br>사진과 상태 설명이 자세할수록 빨리 팔려요.</p>
+        <button id="my-empty-register-btn" type="button" class="mt-5 px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-sm font-bold transition">첫 판매글 등록하기</button>
       </div>
     </div>
   </div>
 </section>
-
-<main class="max-w-6xl mx-auto px-4 py-5">
-  <div class="flex items-center justify-between mb-3">
-    <p class="text-sm font-bold text-slate-600">전체 물품 <span id="result-count" class="text-blue-700">0</span>개</p>
-    <p class="hidden sm:block text-xs text-slate-400">카드를 클릭하면 상세 보기가 열립니다</p>
-  </div>
-  <div id="item-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
-  <div id="empty-state" class="hidden text-center py-16">
-    <img src="images.png" alt="부산기계공업고등학교 로고" class="w-20 h-20 mx-auto rounded-full bg-white object-contain p-1 shadow-md ring-1 ring-slate-200 mb-4">
-    <p class="font-bold text-slate-600">조건에 맞는 물품이 없습니다</p>
-    <p class="text-sm text-slate-400 mt-1">검색어나 필터를 변경하거나, 첫 판매글을 등록해보세요!</p>
-    <button id="empty-register-btn" class="mt-5 px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-sm font-bold transition">판매글 등록하기</button>
-  </div>
-</main>
 
 <footer class="mt-10 bg-blue-950 text-blue-300">
   <div class="max-w-6xl mx-auto px-4 py-8 text-center space-y-2">
     <img src="images.png" alt="부산기계공업고등학교 로고" class="w-16 h-16 mx-auto rounded-full bg-white object-contain p-1 mb-3">
     <p class="font-extrabold text-white">부산기계공고 전공&amp;자격증 마켓</p>
-    <p class="text-xs leading-relaxed">부산기계공업고등학교 수행평가용 데모 프로젝트 · HTML / CSS / JavaScript만 사용 (서버 · DB · 외부 API 없음)<br>등록한 판매글과 이미지는 브라우저 localStorage에만 저장되며, 교내 학생 간 직거래를 권장합니다.</p>
+    <p class="text-xs leading-relaxed">부산기계공업고등학교 학생 간 교내 직거래 마켓 · 등록한 글은 이 브라우저에만 저장돼요<br>물품은 직접 확인한 뒤 거래하고, 어떤 경우에도 선입금은 하지 마세요.</p>
+    <button id="reset-data-btn" type="button" class="mt-2 px-4 py-2 rounded-xl border border-blue-800 text-blue-300 text-xs font-bold hover:bg-blue-900 transition">처음 상태로 초기화</button>
   </div>
 </footer>
+
+<nav class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 flex shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+  <button type="button" class="bottom-tab active" data-nav="market">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    중고장터
+  </button>
+  <button type="button" class="bottom-tab" data-nav="favorites">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+    관심목록
+  </button>
+  <button type="button" class="bottom-tab" data-nav="seller">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .414.336.75.75.75z"/></svg>
+    판매센터
+  </button>
+</nav>
+
+<button id="fab-register" type="button" class="sm:hidden fab" aria-label="판매글 등록">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+</button>
 
 <div id="register-modal" class="modal hidden" role="dialog" aria-modal="true">
   <div class="modal-backdrop" data-close="register-modal"></div>
   <div class="modal-box max-w-lg max-h-[92vh] overflow-y-auto">
     <div class="sticky top-0 z-10 bg-white/95 backdrop-blur px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-      <h2 class="text-lg font-extrabold text-slate-900">판매글 등록</h2>
+      <h2 id="register-title" class="text-lg font-extrabold text-slate-900">판매글 등록</h2>
       <button type="button" data-close="register-modal" class="icon-btn">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
     <form id="register-form" class="p-5 space-y-4" novalidate>
+      <div class="flex items-center gap-2.5 bg-sky-50 ring-1 ring-sky-100 rounded-xl px-3.5 py-2.5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" class="w-4 h-4 text-sky-600 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+        <p class="text-xs text-slate-600">판매자: <b id="reg-seller-name" class="text-slate-800">익명 재학생</b><span class="text-slate-400"> · 판매센터에서 수정할 수 있어요</span></p>
+      </div>
       <div>
-        <span class="form-label">사진 첨부 <span class="font-normal text-slate-400">(선택 · 서버 업로드 없이 미리보기로만 사용)</span></span>
+        <span class="form-label">사진 첨부 <span class="font-normal text-slate-400">(선택)</span></span>
         <div id="reg-preview-wrap" class="hidden relative">
           <img id="reg-preview" alt="미리보기" class="w-full h-44 object-cover rounded-xl ring-1 ring-slate-200">
           <button type="button" id="reg-remove-image" class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-slate-900/70 text-white text-xs font-bold hover:bg-slate-900">삭제</button>
@@ -134,7 +278,7 @@
         <label id="reg-image-label" for="reg-image" class="flex flex-col items-center justify-center gap-1.5 w-full h-32 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:border-blue-400 hover:bg-blue-50/50 cursor-pointer transition text-slate-500">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/></svg>
           <span class="text-xs font-semibold">클릭하여 물품 사진 선택</span>
-          <span class="text-[10px] text-slate-400">JPG, PNG 등 이미지 파일 (localStorage 용량을 위해 자동 축소 저장)</span>
+          <span class="text-[10px] text-slate-400">용량을 줄이기 위해 자동으로 축소 저장돼요</span>
           <input type="file" id="reg-image" accept="image/*" class="hidden">
         </label>
       </div>
@@ -142,7 +286,7 @@
         <label class="form-label" for="reg-title">물품 제목</label>
         <input id="reg-title" type="text" class="input" placeholder="예: Win-Q 피복아크용접기능사 필기" autocomplete="off">
         <div id="reg-suggestions" class="hidden absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden"></div>
-        <p class="hint">Win-Q, 용접, 기능사, 밀링 등 키워드를 입력하면 모의 추천 제목이 표시됩니다.</p>
+        <p class="hint">Win-Q, 용접, 기능사, 밀링 등 자주 판매되는 교재명을 자동으로 추천해요.</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <label class="block">
@@ -154,15 +298,18 @@
           <select id="reg-category" class="input"></select>
         </label>
       </div>
-      <div class="grid grid-cols-2 gap-3">
-        <label class="block">
-          <span class="form-label">판매 가격 (원)</span>
-          <input id="reg-price" type="number" min="0" step="100" class="input" placeholder="11000">
-        </label>
-        <label class="block">
-          <span class="form-label">정가 (원, 선택)</span>
-          <input id="reg-original" type="number" min="0" step="100" class="input" placeholder="26000">
-        </label>
+      <div>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="form-label">판매 가격 (원)</span>
+            <input id="reg-price" type="number" min="0" step="100" class="input" placeholder="11000">
+          </label>
+          <label class="block">
+            <span class="form-label">정가 (원, 선택)</span>
+            <input id="reg-original" type="number" min="0" step="100" class="input" placeholder="26000">
+          </label>
+        </div>
+        <p class="hint">가격을 0원으로 입력하면 '무료 나눔'으로 표시돼요.</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <label class="block">
@@ -190,7 +337,7 @@
         <span class="form-label">상세 설명</span>
         <textarea id="reg-desc" rows="4" class="input resize-none" placeholder="사용 기간, 필기 상태, 거래 가능 시간 등을 적어주세요."></textarea>
       </label>
-      <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 rounded-xl shadow-lg shadow-blue-700/25 transition">등록하기</button>
+      <button type="submit" id="register-submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 rounded-xl shadow-lg shadow-blue-700/25 transition">등록하기</button>
     </form>
   </div>
 </div>
@@ -222,16 +369,25 @@
         <p class="text-xs font-extrabold text-slate-500 mb-1.5">상세 설명</p>
         <p id="detail-desc" class="bg-white ring-1 ring-slate-200 rounded-xl p-4 text-sm leading-relaxed text-slate-700 whitespace-pre-wrap"></p>
       </div>
-      <div>
-        <p class="form-label">거래 상태 변경 (판매자용)</p>
-        <div id="detail-status-group" class="flex gap-2"></div>
+      <div id="detail-manage" class="space-y-4 hidden">
+        <div>
+          <p class="form-label">거래 상태 변경 <span class="font-normal text-slate-400">(거래 확정되면 판매완료로 바꿔주세요)</span></p>
+          <div id="detail-status-group" class="flex gap-2"></div>
+        </div>
+        <div class="flex gap-2">
+          <button id="detail-edit-btn" type="button" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-extrabold py-3 rounded-xl transition flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
+            물품 정보 수정
+          </button>
+          <button id="detail-delete-btn" type="button" class="px-5 border border-red-200 text-red-600 hover:bg-red-50 font-bold text-sm rounded-xl transition">삭제</button>
+        </div>
       </div>
-      <div class="flex gap-2 pt-1">
-        <button id="detail-chat-btn" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 rounded-xl shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
+      <div id="detail-buy" class="flex gap-2 hidden">
+        <button id="detail-chat-btn" type="button" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-extrabold py-3 rounded-xl shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
-          구매 문의하기
+          판매자에게 문의하기
         </button>
-        <button id="detail-delete-btn" class="px-4 border border-red-200 text-red-600 hover:bg-red-50 font-bold text-sm rounded-xl transition">삭제</button>
+        <button id="detail-fav-btn" type="button" class="px-4 rounded-xl border border-slate-300 text-slate-500 hover:border-red-300 hover:text-red-500 font-bold text-sm transition flex items-center gap-1.5">찜하기</button>
       </div>
     </div>
   </div>
@@ -240,12 +396,15 @@
 <div id="chat-modal" class="modal hidden" role="dialog" aria-modal="true">
   <div class="modal-backdrop" data-close="chat-modal"></div>
   <div class="modal-box max-w-md h-[85vh] max-h-[620px] flex flex-col overflow-hidden">
-    <div class="px-4 py-3 bg-blue-950 text-white flex items-center gap-2 shrink-0">
-      <div class="min-w-0">
-        <p class="text-[10px] text-sky-300 font-bold tracking-widest">구매 문의 채팅 (모의 시연)</p>
-        <h3 id="chat-title" class="font-bold text-sm truncate"></h3>
+    <div class="px-4 py-2.5 bg-blue-950 text-white flex items-center gap-2 shrink-0">
+      <div class="w-9 h-9 rounded-full bg-blue-800 flex items-center justify-center shrink-0 text-sky-300">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
       </div>
-      <button type="button" data-close="chat-modal" class="icon-btn on-dark ml-auto shrink-0">
+      <div class="min-w-0 flex-1">
+        <h3 id="chat-title" class="font-bold text-sm truncate"></h3>
+        <p id="chat-seller" class="text-[10px] text-blue-200 truncate"></p>
+      </div>
+      <button type="button" data-close="chat-modal" class="icon-btn on-dark shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -253,7 +412,7 @@
     <div id="chat-quick" class="px-3 pt-2.5 pb-1 flex gap-1.5 overflow-x-auto shrink-0 bg-white"></div>
     <div class="p-3 flex gap-2 bg-white shrink-0">
       <input id="chat-input" type="text" class="input flex-1" placeholder="메시지를 입력하세요..." autocomplete="off">
-      <button id="chat-send" class="bg-blue-700 hover:bg-blue-800 text-white px-4 rounded-xl text-sm font-extrabold transition">전송</button>
+      <button id="chat-send" type="button" class="bg-blue-700 hover:bg-blue-800 text-white px-4 rounded-xl text-sm font-extrabold transition">전송</button>
     </div>
   </div>
 </div>
